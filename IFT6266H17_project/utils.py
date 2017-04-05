@@ -38,7 +38,17 @@ def load_data(path=data_path,filename='train2014_inputs.npy'):
     
 
 
-
+def get_all_data_sep(path,fname1,fname2):
+    
+    x = load_data(path,filename=fname1).astype(floatX).transpose(0,3,1,2) / 255.
+    y = load_data(path,filename=fname2).astype(floatX).transpose(0,3,1,2) / 255.
+    
+    # random middle part
+    for j in [0,1,2]:
+        x[:,j,16:48,16:48] = np.random.randint(0,255,[32,32])/255.
+    print 'Datasize: {}'.format(x.shape[0])
+    
+    return x, y
 
 def get_all_data(path,fname1,fname2):
     
@@ -52,6 +62,18 @@ def get_all_data(path,fname1,fname2):
     
     return x
 
+def get_all_data_border(path,fname1,fname2):
+    
+    b = load_data(path,filename=fname1).astype(floatX).transpose(0,3,1,2) / 255.
+    y = load_data(path,filename=fname2).astype(floatX).transpose(0,3,1,2) / 255.
+    
+    x = b.copy()
+    # get the original
+    for j in [0,1,2]:
+        x[:,j,16:48,16:48] = y[:,j]
+    print 'Datasize: {}'.format(x.shape[0])
+    
+    return b,x
 
 def MLP(net=None,input_shape=None,n_layers=None,
         n_nodes=None,activations=tanh):
